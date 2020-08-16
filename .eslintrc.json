@@ -33,7 +33,7 @@
       "prettier/prettier": "error"
     },
     "settings": {
-      "import-resolver": {
+      "import/resolver": {
         "typescript": {}
       }
     }

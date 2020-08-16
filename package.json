@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node-dev --inspect --ignore-watch node_modules src/server.ts"
+    "dev:server": "ts-node-dev --transpile-only --inspect --ignore-watch node_modules src/server.ts"
   },
   "devDependencies": {
     "@types/express": "^4.17.7",
@@ -18,6 +18,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "uuidv4": "^6.2.2"
   }
 }
