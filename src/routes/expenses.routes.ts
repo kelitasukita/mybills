@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import * as Yup from 'yup';
-import { uuid } from 'uuidv4';
+
+import Expense from '../models/Expenses';
 
 const expensesRouter = Router();
-const expenses = [];
+
+const expenses: Expense[] = [];
 
 expensesRouter.post('/', async (request, response) => {
   const {
@@ -28,10 +30,7 @@ expensesRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: 'Validation failed!' });
   }
 
-  // @todo validar pra não repetir
-
-  const expense = {
-    id: uuid(),
+  const expense = new Expense(
     description,
     value,
     automaticDebit,
@@ -40,7 +39,7 @@ expensesRouter.post('/', async (request, response) => {
     installments,
     paid,
     recurrent,
-  };
+  );
 
   expenses.push(expense);
 
