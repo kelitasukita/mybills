@@ -18,7 +18,9 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "@types/yup": "^0.29.5",
     "express": "^4.17.1",
-    "uuidv4": "^6.2.2"
+    "uuidv4": "^6.2.2",
+    "yup": "^0.29.3"
   }
 }
