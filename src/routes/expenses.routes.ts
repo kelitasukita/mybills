@@ -30,20 +30,27 @@ expensesRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: 'Validation failed!' });
   }
 
-  const expense = new Expense(
-    description,
-    value,
-    automaticDebit,
-    dueDate,
-    obs,
-    installments,
-    paid,
-    recurrent,
-  );
+  for (
+    let currentInstallment = 1;
+    currentInstallment <= installments;
+    currentInstallment += 1
+  ) {
+    const expense = new Expense(
+      description,
+      value,
+      automaticDebit,
+      dueDate,
+      obs,
+      currentInstallment,
+      installments,
+      paid,
+      recurrent,
+    );
 
-  expenses.push(expense);
+    expenses.push(expense);
+  }
 
-  return response.json(expense);
+  return response.json(expenses);
 });
 
 export default expensesRouter;
