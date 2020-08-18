@@ -13,6 +13,8 @@ class Expenses {
 
   obs: string;
 
+  currentInstallment: bigint;
+
   installments: bigint;
 
   paid: boolean;
@@ -25,6 +27,7 @@ class Expenses {
     automaticDebit: boolean,
     dueDate: Date,
     obs: string,
+    currentInstallment: bigint,
     installments: bigint,
     paid: boolean,
     recurrent: boolean,
@@ -35,6 +38,7 @@ class Expenses {
     this.automaticDebit = automaticDebit;
     this.dueDate = dueDate;
     this.obs = obs;
+    this.currentInstallment = currentInstallment;
     this.installments = installments;
     this.paid = paid;
     this.recurrent = recurrent;
