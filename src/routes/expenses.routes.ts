@@ -30,11 +30,15 @@ expensesRouter.post('/', async (request, response) => {
 });
 
 expensesRouter.get('/', async (request, response) => {
-  return response.json(await getRepository(Expense).find())
+  const expensesList = await getRepository(Expense).find()
+
+  return response.json(expensesList);
 });
 
 expensesRouter.delete('/:id', async (request, response) => {
-  return response.json(await getRepository(Expense).delete(request.params.id))
+  const expensesDelete = await getRepository(Expense).delete(request.params.id)
+
+  return response.json(expensesDelete);
 });
 
 export default expensesRouter;
