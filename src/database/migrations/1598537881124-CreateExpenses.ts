@@ -9,9 +9,10 @@ export default class CreateExpenses1598537881124 implements MigrationInterface {
           columns: [
             {
               name: 'id',
-              type: 'varchar',
+              type: 'uuid',
               isPrimary: true,
-              generationStrategy: 'uuid'
+              generationStrategy: 'uuid',
+              default: 'uuid_generate_v4()'
             },
             {
               name: 'description',
@@ -55,6 +56,16 @@ export default class CreateExpenses1598537881124 implements MigrationInterface {
               name: 'recurrent',
               type: 'boolean',
               isNullable: false,
+            },
+            {
+              name: 'created_at',
+              type: 'timestamp',
+              default: 'now()',
+            },
+            {
+              name: 'updated_at',
+              type: 'timestamp',
+              default: 'now()',
             }
 
           ]
