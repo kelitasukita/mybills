@@ -1,6 +1,8 @@
 import { Router, request, response } from 'express';
 
 import CreateExpenseService from '../services/CreateExpenseService';
+import Expense from '../models/Expenses';
+import { getRepository } from 'typeorm';
 
 const expensesRouter = Router();
 
@@ -26,6 +28,10 @@ expensesRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: err.message });
   }
 });
+
+expensesRouter.get('/', async (request, response) => {
+  return response.json(await getRepository(Expense).find());
+})
 
 export default expensesRouter;
 
