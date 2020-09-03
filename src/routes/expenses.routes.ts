@@ -38,8 +38,21 @@ expensesRouter.get('/', async (request, response) => {
 expensesRouter.delete('/:id', async (request, response) => {
   const expensesDelete = await getRepository(Expense).delete(request.params.id)
 
-  return response.json(expensesDelete);
+  return response.json({ message: 'Expense successfully deleted!'});
+});
+
+expensesRouter.put('/:id', async (request, response) => {
+  const expense = await getRepository(Expense).findOne(request.params.id);
+
+  if (!expense) {
+    return response.json({ error: 'Expense does not exist!'})
+  }
+
+  getRepository(Expense).merge(expense, request.body);
+
+  const expenseUpdated = await getRepository(Expense).save(expense);
+
+  return response.json(expenseUpdated);
 });
 
 export default expensesRouter;
-
