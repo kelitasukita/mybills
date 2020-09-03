@@ -30,8 +30,12 @@ expensesRouter.post('/', async (request, response) => {
 });
 
 expensesRouter.get('/', async (request, response) => {
-  return response.json(await getRepository(Expense).find());
-})
+  return response.json(await getRepository(Expense).find())
+});
+
+expensesRouter.delete('/:id', async (request, response) => {
+  return response.json(await getRepository(Expense).delete(request.params.id))
+});
 
 export default expensesRouter;
 
