@@ -38,14 +38,17 @@ export default class CreateExpenses1598537881124 implements MigrationInterface {
             {
               name: 'obs',
               type: 'varchar',
+              isNullable: true,
             },
             {
               name: 'currentInstallment',
               type: 'int',
+              isNullable: true,
             },
             {
               name: 'installments',
               type: 'int',
+              isNullable: true,
             },
             {
               name: 'paid',
