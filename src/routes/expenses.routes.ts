@@ -1,8 +1,9 @@
 import { Router, request, response } from 'express';
 
 import CreateExpenseService from '../services/CreateExpenseService';
-import Expense from '../models/Expenses';
-import { getRepository } from 'typeorm';
+import Expense from '../models/Expense';
+import { getRepository, getCustomRepository } from 'typeorm';
+import ExpenseRepository from '../repositories/ExpensesRepository';
 
 const expensesRouter = Router();
 
@@ -30,9 +31,13 @@ expensesRouter.post('/', async (request, response) => {
 });
 
 expensesRouter.get('/', async (request, response) => {
-  const expensesList = await getRepository(Expense).find()
+  const expenseRepository = getCustomRepository(ExpenseRepository);
 
-  return response.json(expensesList);
+  return response.json({
+    overview: {},
+    manualPayments: await expenseRepository.manualPayment(),
+    automaticPayments: await expenseRepository.automaticPayments()
+  });
 });
 
 expensesRouter.delete('/:id', async (request, response) => {
