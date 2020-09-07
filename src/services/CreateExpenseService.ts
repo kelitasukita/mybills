@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
 
-import Expense from "../models/Expenses";
+import Expense from "../models/Expense";
 
 interface Request {
   description: string;
@@ -16,7 +16,12 @@ interface Request {
 }
 
 class CreateExpenseService {
-  public async execute({ description, value, automaticDebit, dueDate, obs, currentInstallment, installments, paid, recurrent }: Request): Promise<Expense> {
+  public async execute({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense> {
+
+    // Validar dados
+    // Checar se a despesa não possui parcelas
+    // Se possuir parcelas fazer o loop para cadastrar cada parcela
+
     const expensesRepository = getRepository(Expense);
 
     const expense = expensesRepository.create({
