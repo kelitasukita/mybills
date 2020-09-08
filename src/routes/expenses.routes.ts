@@ -36,7 +36,8 @@ expensesRouter.get('/', async (request, response) => {
   return response.json({
     overview: {},
     manualPayments: await expenseRepository.manualPayment(),
-    automaticPayments: await expenseRepository.automaticPayments()
+    automaticPayments: await expenseRepository.automaticPayments(),
+    allPayments: await expenseRepository.allPayments()
   });
 });
 

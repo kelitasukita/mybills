@@ -27,6 +27,17 @@ class ExpenseRepository extends Repository<Expense>   {
 
     return expenses;
   }
+
+  public async allPayments(): Promise<Expense[] | undefined> {
+    const allExpenses = await this.find({
+      select: [ 'id','description', 'paid', 'value'],
+      order: {
+        paid: 'DESC'
+      }
+    });
+
+    return allExpenses;
+  }
 }
 
 export default ExpenseRepository;
