@@ -1,9 +1,43 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, getRepository } from 'typeorm';
 
 import Expense from '../models/Expense';
 
+interface Request {
+  description: string;
+  value: number;
+  automaticDebit: boolean;
+  dueDate: Date;
+  obs: string;
+  currentInstallment: bigint;
+  installments: bigint;
+  paid: boolean;
+  recurrent: boolean;
+
+}
+
 @EntityRepository(Expense)
 class ExpenseRepository extends Repository<Expense>   {
+  public async createExpense({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense> {
+
+    const expenseRepository = getRepository(Expense);
+
+    const expense = await expenseRepository.create({
+      description,
+      value,
+      automaticDebit,
+      dueDate,
+      obs,
+      currentInstallment,
+      installments,
+      paid,
+      recurrent
+    });
+
+    return expenseRepository.save(expense);
+
+  }
+
+
   public async manualPayment(): Promise<Expense[]|undefined> {
     const expenses = await this.find({
       select: ["description", "dueDate", "paid", "value"],
