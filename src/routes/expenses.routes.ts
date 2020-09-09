@@ -11,7 +11,7 @@ expensesRouter.post('/', async (request, response) => {
   try {
     const { description, value, automaticDebit, dueDate, obs, currentInstallment, installments, paid, recurrent } = request.body;
 
-    const createExpense = new CreateExpenseService();
+    const createExpense = new CreateExpenseService(getCustomRepository(ExpenseRepository));
 
     const expense = await createExpense.execute({
       description,
@@ -36,7 +36,8 @@ expensesRouter.get('/', async (request, response) => {
   return response.json({
     overview: {},
     manualPayments: await expenseRepository.manualPayment(),
-    automaticPayments: await expenseRepository.automaticPayments()
+    automaticPayments: await expenseRepository.automaticPayments(),
+    allPayments: await expenseRepository.allPayments()
   });
 });
 
