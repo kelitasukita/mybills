@@ -1,4 +1,5 @@
 import *as Yup from 'yup';
+import { addMonths } from 'date-fns';
 
 import Expense from "../models/Expense";
 import ExpensesRepository from '../repositories/ExpensesRepository';
@@ -25,11 +26,6 @@ class CreateExpenseService {
   }
 
   public async execute({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense[] | null> {
-
-    // [x] Validar dados
-    // [ ] Checar se a despesa não possui parcelas
-    // [ ] Se possuir parcelas fazer o loop para cadastrar cada parcela
-
     const schema = Yup.object().shape({
       description: Yup.string().required(),
       value: Yup.number().required(),
@@ -46,16 +42,20 @@ class CreateExpenseService {
       throw Error('Validation Failed')
     }
 
+    if(await this.expensesRepository.isDuplicated(description, value, dueDate)) {
+      throw Error(`The expense ${description} with value ${value} on this date already exists`);
+    }
+
     const expenses = [];
 
     if(installments > 1) {
-
+      var monthsToAdd = 0;
       for (let i = currentInstallment; i <= installments; ++i) {
         let currentExpense = await this.expensesRepository.createExpense({
           description,
           value,
           automaticDebit,
-          dueDate, // subir os meses/ano também
+          dueDate: addMonths(new Date(dueDate), monthsToAdd++),
           obs,
           currentInstallment: i,
           installments,
@@ -66,7 +66,7 @@ class CreateExpenseService {
         expenses.push(currentExpense);
       }
     } else {
-      const expense = await this.expensesRepository.create({
+      const expense = await this.expensesRepository.createExpense({
         description,
         value,
         automaticDebit,
@@ -85,5 +85,6 @@ class CreateExpenseService {
     return expenses;
   }
 }
+
 
 export default CreateExpenseService;
