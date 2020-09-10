@@ -48,6 +48,10 @@ class CreateExpenseService {
       throw Error('Validation Failed')
     }
 
+    if(await this.expensesRepository.isDuplicated(description, value, dueDate)) {
+      throw Error(`The expense ${description} with value ${value} on this date already exists`);
+    }
+
     const expenses = [];
 
     if(installments > 1) {
@@ -68,7 +72,7 @@ class CreateExpenseService {
         expenses.push(currentExpense);
       }
     } else {
-      const expense = await this.expensesRepository.create({
+      const expense = await this.expensesRepository.createExpense({
         description,
         value,
         automaticDebit,

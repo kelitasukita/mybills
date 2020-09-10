@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository } from 'typeorm';
+import { EntityRepository, Repository, getRepository, Between } from 'typeorm';
 
 import Expense from '../models/Expense';
 
@@ -71,6 +71,19 @@ class ExpenseRepository extends Repository<Expense>   {
     });
 
     return allExpenses;
+  }
+
+  public async isDuplicated(description: string, value: number, dueDate:Date ): Promise<Expense | undefined> {
+
+    const expense = await this.findOne({
+      where: {
+        description,
+        value,
+        dueDate
+      }
+    });
+
+    return expense;
   }
 }
 
