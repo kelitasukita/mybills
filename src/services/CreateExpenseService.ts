@@ -1,4 +1,6 @@
 import *as Yup from 'yup';
+import { addMonths } from 'date-fns';
+
 
 import Expense from "../models/Expense";
 import ExpensesRepository from '../repositories/ExpensesRepository';
@@ -49,13 +51,13 @@ class CreateExpenseService {
     const expenses = [];
 
     if(installments > 1) {
-
+      var monthsToAdd = 0;
       for (let i = currentInstallment; i <= installments; ++i) {
         let currentExpense = await this.expensesRepository.createExpense({
           description,
           value,
           automaticDebit,
-          dueDate, // subir os meses/ano também
+          dueDate: addMonths(new Date(dueDate), monthsToAdd++),
           obs,
           currentInstallment: i,
           installments,
