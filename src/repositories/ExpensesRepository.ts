@@ -18,7 +18,6 @@ interface Request {
 @EntityRepository(Expense)
 class ExpenseRepository extends Repository<Expense>   {
   public async createExpense({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense> {
-
     const expenseRepository = getRepository(Expense);
 
     const expense = await expenseRepository.create({
@@ -34,7 +33,6 @@ class ExpenseRepository extends Repository<Expense>   {
     });
 
     return expenseRepository.save(expense);
-
   }
 
 
@@ -50,6 +48,7 @@ class ExpenseRepository extends Repository<Expense>   {
     return expenses;
   }
 
+
   public async automaticPayments(): Promise<Expense[]|undefined> {
     const expenses = await this.find({
       select: ["description", "paid", "value"],
@@ -62,6 +61,7 @@ class ExpenseRepository extends Repository<Expense>   {
     return expenses;
   }
 
+
   public async allPayments(): Promise<Expense[] | undefined> {
     const allExpenses = await this.find({
       select: [ 'id','description', 'paid', 'value'],
@@ -72,6 +72,7 @@ class ExpenseRepository extends Repository<Expense>   {
 
     return allExpenses;
   }
+
 
   public async isDuplicated(description: string, value: number, dueDate:Date ): Promise<Expense | undefined> {
 
@@ -86,5 +87,6 @@ class ExpenseRepository extends Repository<Expense>   {
     return expense;
   }
 }
+
 
 export default ExpenseRepository;

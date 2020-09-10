@@ -30,6 +30,7 @@ expensesRouter.post('/', async (request, response) => {
   }
 });
 
+
 expensesRouter.get('/', async (request, response) => {
   const expenseRepository = getCustomRepository(ExpenseRepository);
 
@@ -41,11 +42,13 @@ expensesRouter.get('/', async (request, response) => {
   });
 });
 
+
 expensesRouter.delete('/:id', async (request, response) => {
   const expensesDelete = await getRepository(Expense).delete(request.params.id)
 
   return response.json({ message: 'Expense successfully deleted!'});
 });
+
 
 expensesRouter.put('/:id', async (request, response) => {
   const expense = await getRepository(Expense).findOne(request.params.id);
@@ -60,5 +63,6 @@ expensesRouter.put('/:id', async (request, response) => {
 
   return response.json(expenseUpdated);
 });
+
 
 export default expensesRouter;

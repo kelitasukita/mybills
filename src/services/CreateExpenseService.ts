@@ -1,7 +1,6 @@
 import *as Yup from 'yup';
 import { addMonths } from 'date-fns';
 
-
 import Expense from "../models/Expense";
 import ExpensesRepository from '../repositories/ExpensesRepository';
 
@@ -27,11 +26,6 @@ class CreateExpenseService {
   }
 
   public async execute({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense[] | null> {
-
-    // [x] Validar dados
-    // [ ] Checar se a despesa não possui parcelas
-    // [ ] Se possuir parcelas fazer o loop para cadastrar cada parcela
-
     const schema = Yup.object().shape({
       description: Yup.string().required(),
       value: Yup.number().required(),
@@ -91,5 +85,6 @@ class CreateExpenseService {
     return expenses;
   }
 }
+
 
 export default CreateExpenseService;
