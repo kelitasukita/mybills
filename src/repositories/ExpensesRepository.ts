@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository, Between } from 'typeorm';
+import { EntityRepository, Repository, getRepository, Between, Not } from 'typeorm';
 
 import Expense from '../models/Expense';
 
@@ -36,9 +36,26 @@ class ExpenseRepository extends Repository<Expense>   {
   }
 
 
+  // public async updateExpense({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense | any> {
+  //   const expense = await getRepository(Expense).findOne({
+  //     where: 'id'
+  //   });
+
+  //   getRepository(Expense).merge(expense);
+
+  //   const expenseUpdated = await getRepository(Expense).save(expense);
+
+  //   return expenseUpdated;
+
+
+
+
+  // }
+
+
   public async manualPayment(): Promise<Expense[]|undefined> {
     const expenses = await this.find({
-      select: ["description", "dueDate", "paid", "value"],
+      select: ["id", "description", "dueDate", "paid", "value"],
       where: { automaticDebit: false },
       order: {
         dueDate: "ASC"
@@ -51,7 +68,7 @@ class ExpenseRepository extends Repository<Expense>   {
 
   public async automaticPayments(): Promise<Expense[]|undefined> {
     const expenses = await this.find({
-      select: ["description", "paid", "value"],
+      select: ["id", "description", "paid", "value"],
       where: { automaticDebit: true },
       order: {
         value: "DESC"
@@ -73,11 +90,24 @@ class ExpenseRepository extends Repository<Expense>   {
     return allExpenses;
   }
 
-
   public async isDuplicated(description: string, value: number, dueDate:Date ): Promise<Expense | undefined> {
 
     const expense = await this.findOne({
       where: {
+        description,
+        value,
+        dueDate
+      }
+    });
+
+    return expense;
+  }
+
+  public async isDuplicatedButNotMe(id:string, description: string, value: number, dueDate:Date ): Promise<Expense | undefined> {
+
+    const expense = await this.findOne({
+      where: {
+        id: Not(id),
         description,
         value,
         dueDate
