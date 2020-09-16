@@ -57,7 +57,7 @@ class UpdateExpenseService {
 
     const expenses = [];
 
-    if(installments > 1) {
+    if(installments > 1 || installments != expenseToBeUpdated.installments) {
       await this.repository.delete({
         description: expenseToBeUpdated.description,
         value: expenseToBeUpdated.value,
@@ -81,7 +81,7 @@ class UpdateExpenseService {
         expenses.push(currentExpense);
       }
     } else {
-      const updatedExpense = await this.repository.update(id, {
+      await this.repository.update(id, {
         description,
         value,
         automaticDebit,
@@ -93,9 +93,11 @@ class UpdateExpenseService {
         recurrent
       });
 
-      expenses.push(updatedExpense.raw);
+      const updatedExpense = await this.repository.findOne(id);
+      if (updatedExpense) {
+        expenses.push(updatedExpense);
+      }
     }
-
 
     return expenses;
   }

@@ -81,7 +81,6 @@ class CreateExpenseService {
       expenses.push(expense);
     }
 
-
     return expenses;
   }
 }
