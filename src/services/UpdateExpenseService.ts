@@ -3,6 +3,7 @@ import { addMonths } from 'date-fns';
 
 import Expense from "../models/Expense";
 import ExpensesRepository from '../repositories/ExpensesRepository';
+import { Not } from 'typeorm';
 
 interface Request {
   description: string;
@@ -45,7 +46,7 @@ class UpdateExpenseService {
     }
 
     // Validar se o registro existe no banco findOneOrFail no repository
-    const expenseToBeUpdated = this.repository.findOneOrFail(id);
+    const expenseToBeUpdated = await this.repository.findOneOrFail(id);
 
     // Checar duplicados mas não checar no registro em edição
     if(await this.repository.isDuplicatedButNotMe(id, description, value, dueDate)) {
@@ -57,6 +58,12 @@ class UpdateExpenseService {
     const expenses = [];
 
     if(installments > 1) {
+      await this.repository.delete({
+        description: expenseToBeUpdated.description,
+        value: expenseToBeUpdated.value,
+        installments: expenseToBeUpdated.installments
+      });
+
       var monthsToAdd = 0;
       for (let i = currentInstallment; i <= installments; ++i) {
         let currentExpense = await this.repository.createExpense({
