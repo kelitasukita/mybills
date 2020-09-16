@@ -5,10 +5,10 @@ import Expense from '../models/Expense';
 import { getRepository, getCustomRepository } from 'typeorm';
 import ExpenseRepository from '../repositories/ExpensesRepository';
 import UpdateExpenseService from '../services/UpdateExpenseService';
-import { lightFormat } from 'date-fns';
 
 const expensesRouter = Router();
 
+// Criar despesa
 expensesRouter.post('/', async (request, response) => {
   try {
     const { description, value, automaticDebit, dueDate, obs, currentInstallment, installments, paid, recurrent } = request.body;
@@ -25,14 +25,14 @@ expensesRouter.post('/', async (request, response) => {
       installments,
       paid,
       recurrent
-    })
+    });
      return response.json(expense);
   } catch (err) {
     return response.status(400).json({ error: err.message });
   }
 });
 
-
+// Listar todas as despesas, ganhos e saldo
 expensesRouter.get('/', async (request, response) => {
   const expenseRepository = getCustomRepository(ExpenseRepository);
 
@@ -44,7 +44,7 @@ expensesRouter.get('/', async (request, response) => {
   });
 });
 
-// Rota para buscar dados para poder apresentar no formulário para edição
+// Listar itens para edição
 expensesRouter.get('/:id', async (request, response) => {
   const expenseRepository = getCustomRepository(ExpenseRepository);
   try {
@@ -55,15 +55,18 @@ expensesRouter.get('/:id', async (request, response) => {
   }
 });
 
-
+// Deletar uma despesa
 expensesRouter.delete('/:id', async (request, response) => {
-  const expensesDelete = await getRepository(Expense).delete(request.params.id)
+  try {
+    const expensesDelete = await getRepository(Expense).delete(request.params.id)
 
-  return response.json({ message: 'Expense successfully deleted!'});
+    return response.json({ message: 'Expense successfully deleted.'});
+  } catch {
+    return response.status(400).json({ message: 'Fail to delete expense.'});
+  }
 });
 
-// GET /expenses/34124532 - Só pra pegar os dados dessa expense pra colocar no formulário
-// PUT /expenses/34124532 - Atualiza os dados de fato
+// Editar uma despesa
 expensesRouter.put('/:id', async (request, response) => {
 
   const {
@@ -95,10 +98,13 @@ expensesRouter.put('/:id', async (request, response) => {
     paid,
     recurrent
   };
+  try {
+    const executionResponse = await service.execute(id, dadosParaEdicao);
+    return response.json(executionResponse);
+  } catch(e) {
+    return response.status(400).json({ message: e.message });
+  }
 
-  const executionResponse = service.execute(id, dadosParaEdicao);
-
-  return response.json(executionResponse);
 });
 
 
