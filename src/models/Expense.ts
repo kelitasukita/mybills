@@ -8,7 +8,7 @@ class Expense {
   @Column('varchar')
   description: String;
 
-  @Column('decimal')
+  @Column('decimal', { precision: 10, scale: 2 })
   value: Number
 
   @Column('boolean')
