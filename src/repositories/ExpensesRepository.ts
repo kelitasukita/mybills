@@ -35,24 +35,6 @@ class ExpenseRepository extends Repository<Expense>   {
     return expenseRepository.save(expense);
   }
 
-
-  // public async updateExpense({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense | any> {
-  //   const expense = await getRepository(Expense).findOne({
-  //     where: 'id'
-  //   });
-
-  //   getRepository(Expense).merge(expense);
-
-  //   const expenseUpdated = await getRepository(Expense).save(expense);
-
-  //   return expenseUpdated;
-
-
-
-
-  // }
-
-
   public async manualPayment(): Promise<Expense[]|undefined> {
     const expenses = await this.find({
       select: ["id", "description", "dueDate", "paid", "value"],
