@@ -44,6 +44,22 @@ expensesRouter.get('/', async (request, response) => {
   });
 });
 
+expensesRouter.get('/unpaid', async (request, response) => {
+  const expenseRepository = getCustomRepository(ExpenseRepository);
+
+  return response.json({
+    data:  await expenseRepository.unpaid()
+  });
+});
+
+expensesRouter.get('/paid', async (request, response) => {
+  const expenseRepository = getCustomRepository(ExpenseRepository);
+
+  return response.json({
+    data:  await expenseRepository.paid()
+  });
+});
+
 // Listar itens para edição
 expensesRouter.get('/:id', async (request, response) => {
   const expenseRepository = getCustomRepository(ExpenseRepository);
