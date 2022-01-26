@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository, Between, Not } from 'typeorm';
+import { EntityRepository, Repository, getRepository, Between, Not, LessThan } from 'typeorm';
 
 import Expense from '../models/Expense';
 
@@ -50,9 +50,10 @@ class ExpenseRepository extends Repository<Expense>   {
 
   public async automaticPayments(): Promise<Expense[]|undefined> {
     const expenses = await this.find({
-      select: ["id", "description", "paid", "value"],
+      select: ["id", "description", "paid", "value", "dueDate"],
       where: { automaticDebit: true },
       order: {
+        dueDate: "ASC",
         value: "DESC"
       }
     });
@@ -63,9 +64,51 @@ class ExpenseRepository extends Repository<Expense>   {
 
   public async allPayments(): Promise<Expense[] | undefined> {
     const allExpenses = await this.find({
-      select: [ 'id','description', 'paid', 'value'],
+      select: [ 'id','description', 'paid', 'value', 'currentInstallment', 'installments'],
       order: {
-        paid: 'DESC'
+        paid: 'DESC',
+        dueDate: "ASC",
+        value: "DESC"
+      }
+    });
+
+    return allExpenses;
+  }
+
+  public async unpaid(): Promise<Expense[] | undefined> {
+
+    const today = new Date();
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+
+    const allExpenses = await this.find({
+      select: [ 'id','description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
+      where: {
+        paid: false,
+        dueDate: LessThan(lastDayOfMonth)
+      },
+      order: {
+        dueDate: "ASC",
+        value: "DESC"
+      }
+    });
+
+    return allExpenses;
+  }
+
+  public async paid(): Promise<Expense[] | undefined> {
+
+    const today = new Date();
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+
+    const allExpenses = await this.find({
+      select: [ 'id','description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
+      where: {
+        paid: true,
+        dueDate: LessThan(lastDayOfMonth)
+      },
+      order: {
+        dueDate: "ASC",
+        value: "DESC"
       }
     });
 
