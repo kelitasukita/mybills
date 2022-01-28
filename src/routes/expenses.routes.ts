@@ -5,6 +5,7 @@ import Expense from '../models/Expense';
 import { getRepository, getCustomRepository } from 'typeorm';
 import ExpenseRepository from '../repositories/ExpensesRepository';
 import UpdateExpenseService from '../services/UpdateExpenseService';
+import TogglePaidService from '../services/TogglePaidService';
 
 const expensesRouter = Router();
 
@@ -79,6 +80,22 @@ expensesRouter.delete('/:id', async (request, response) => {
     return response.json({ message: 'Expense successfully deleted.'});
   } catch {
     return response.status(400).json({ message: 'Fail to delete expense.'});
+  }
+});
+
+// Marcar como paga ou não paga
+expensesRouter.patch('/:id/toggle', async (request, response) => {
+  const id = request.params.id;
+  
+  const repository = getCustomRepository(ExpenseRepository);
+
+  const service = new TogglePaidService(repository);
+
+  try {
+    const executionResponse = await service.execute(id);
+    return response.json(executionResponse);
+  } catch(e) {
+    return response.status(400).json({ message: e.message });
   }
 });
 
