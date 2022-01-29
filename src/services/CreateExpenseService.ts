@@ -17,12 +17,11 @@ interface Request {
 
 }
 
-
 class CreateExpenseService {
   private expensesRepository: ExpensesRepository;
 
-  constructor(expensesRepository: ExpensesRepository) {
-    this.expensesRepository = expensesRepository;
+  constructor(repository: ExpensesRepository) {
+    this.expensesRepository = repository;
   }
 
   public async execute({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense[] | null> {
