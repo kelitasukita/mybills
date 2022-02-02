@@ -22,8 +22,8 @@ expensesRouter.post('/', async (request, response) => {
       automaticDebit,
       dueDate,
       obs,
-      currentInstallment,
-      installments,
+      currentInstallment: Number(currentInstallment),
+      installments: Number(currentInstallment),
       paid,
       recurrent
     });
@@ -86,7 +86,7 @@ expensesRouter.delete('/:id', async (request, response) => {
 // Marcar como paga ou não paga
 expensesRouter.patch('/:id/toggle', async (request, response) => {
   const id = request.params.id;
-  
+
   const repository = getCustomRepository(ExpenseRepository);
 
   const service = new TogglePaidService(repository);

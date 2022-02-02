@@ -1,3 +1,4 @@
+
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
 export class CreateEarnings1643491750428 implements MigrationInterface {
