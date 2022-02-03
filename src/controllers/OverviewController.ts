@@ -22,7 +22,7 @@ class OverviewController {
     }
 
     if (year && month) {
-      today = new Date(year, month - 1);
+      today = new Date(+year, +month - 1);
 
       firstDay = new Date(today.getFullYear(), today.getMonth(), 24);
       endDate = new Date(today.getFullYear(), today.getMonth() + 1, 23);
