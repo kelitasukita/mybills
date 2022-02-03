@@ -7,15 +7,26 @@ class OverviewController {
 
   async overviewHandle(request: Request, response: Response)
   {
-    const { year, month } = request.query;
+    const {  year,  month } = request.query;
+
+    let today = new Date();
+    let firstDay = new Date();
+    let endDate = new Date();
+
+    if (today.getDate() > 24) {
+      firstDay = new Date(today.getFullYear(), today.getMonth(), 24); // mês atual
+      endDate = new Date(today.getFullYear(), today.getMonth()+1, 23); // mês seguinte
+    } else {
+      firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 24); // mês anterior
+      endDate = new Date(today.getFullYear(), today.getMonth(), 23); // mês atual
+    }
 
     if (year && month) {
-      const today = new Date(year, month - 1);
-    } else {
-      const today = new Date();
+      today = new Date(year, month - 1);
+
+      firstDay = new Date(today.getFullYear(), today.getMonth(), 24);
+      endDate = new Date(today.getFullYear(), today.getMonth() + 1, 23);
     }
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-    const endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
 
     const earningsRepo = getCustomRepository(EarningsRepository);
 
@@ -30,7 +41,13 @@ class OverviewController {
       .where('"dueDate" BETWEEN :firstDay AND :endDate', {endDate, firstDay})
       .getRawOne();
 
-      return response.json({ earnings, expenses, balance: earnings - expenses });
+      return response.json({
+        earnings,
+        expenses,
+        balance: earnings - expenses,
+        from: firstDay,
+        to: endDate
+      });
   }
 }
 
