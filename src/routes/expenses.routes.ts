@@ -22,8 +22,8 @@ expensesRouter.post('/', async (request, response) => {
       automaticDebit,
       dueDate,
       obs,
-      currentInstallment: Number(currentInstallment),
-      installments: Number(currentInstallment),
+      currentInstallment,
+      installments,
       paid,
       recurrent
     });

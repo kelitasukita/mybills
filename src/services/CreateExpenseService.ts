@@ -31,8 +31,8 @@ class CreateExpenseService {
       automaticDebit: Yup.boolean().required(),
       dueDate: Yup.date().required(),
       obs: Yup.string(),
-      currentInstallment: Yup.number(),
-      installments: Yup.number(),
+      currentInstallment: Yup.number().integer(),
+      installments: Yup.number().integer(),
       paid: Yup.boolean(),
       recurrent: Yup.boolean().required()
     });
@@ -61,6 +61,8 @@ class CreateExpenseService {
           paid,
           recurrent
         });
+
+        paid = false;
 
         expenses.push(currentExpense);
       }
