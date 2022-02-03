@@ -41,13 +41,13 @@ class OverviewController {
       .where('"dueDate" BETWEEN :firstDay AND :endDate', {endDate, firstDay})
       .getRawOne();
 
-      return response.json({
-        earnings,
-        expenses,
-        balance: earnings - expenses,
-        from: firstDay,
-        to: endDate
-      });
+    return response.json({
+      earnings: (+earnings).toFixed(2),
+      expenses: (+expenses).toFixed(2),
+      balance: (earnings - expenses).toFixed(2),
+      from: firstDay,
+      to: endDate
+    });
   }
 }
 
