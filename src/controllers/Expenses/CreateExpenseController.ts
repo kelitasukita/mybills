@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
-import ExpenseRepository from "../repositories/ExpensesRepository";
+import ExpenseRepository from "../../repositories/ExpensesRepository";
 
 class CreateExpenseController {
 

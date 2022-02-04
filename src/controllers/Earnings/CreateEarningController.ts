@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
-import EarningsRepository from "../repositories/EarningsRepository";
+import EarningsRepository from "../../repositories/EarningsRepository";
 
 class CreateEarningController {
 

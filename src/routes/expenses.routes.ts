@@ -5,13 +5,17 @@ import { getRepository, getCustomRepository } from 'typeorm';
 import ExpenseRepository from '../repositories/ExpensesRepository';
 import UpdateExpenseService from '../services/UpdateExpenseService';
 import TogglePaidService from '../services/TogglePaidService';
-import CreateExpenseController from '../controllers/CreateExpenseController';
-import DeleteExpenseController from '../controllers/DeleteExpenseController';
+import CreateExpenseController from '../controllers/Expenses/CreateExpenseController';
+import DeleteExpenseController from '../controllers/Expenses/DeleteExpenseController';
+import GetExpenseController from '../controllers/Expenses/GetExpenseController';
+
 
 const expensesRouter = Router();
 
-// Criar despesa
+
 expensesRouter.post('/', CreateExpenseController.handle);
+expensesRouter.delete('/:id', DeleteExpenseController.handle);
+expensesRouter.get('/:id', GetExpenseController.handle);
 
 // Listar todas as despesas, ganhos e saldo
 expensesRouter.get('/', async (request, response) => {
@@ -41,19 +45,6 @@ expensesRouter.get('/paid', async (request, response) => {
   });
 });
 
-// Listar itens para edição
-expensesRouter.get('/:id', async (request, response) => {
-  const expenseRepository = getCustomRepository(ExpenseRepository);
-  try {
-    const expense = await expenseRepository.findOneOrFail(request.params.id);
-    return response.json(expense);
-  } catch {
-    return response.status(404).json({message: 'Expense not found!'});
-  }
-});
-
-// Deletar uma despesa
-expensesRouter.delete('/:id', DeleteExpenseController.handle);
 
 // Marcar como paga ou não paga
 expensesRouter.patch('/:id/toggle', async (request, response) => {
@@ -66,8 +57,8 @@ expensesRouter.patch('/:id/toggle', async (request, response) => {
   try {
     const executionResponse = await service.execute(id);
     return response.json(executionResponse);
-  } catch(e) {
-    return response.status(400).json({ message: e.message });
+  } catch(error: any) {
+    return response.status(400).json({ error: error.message });
   }
 });
 
@@ -106,8 +97,8 @@ expensesRouter.put('/:id', async (request, response) => {
   try {
     const executionResponse = await service.execute(id, dadosParaEdicao);
     return response.json(executionResponse);
-  } catch(e) {
-    return response.status(400).json({ message: e.message });
+  } catch(error: any) {
+    return response.status(400).json({ error: error.message });
   }
 
 });

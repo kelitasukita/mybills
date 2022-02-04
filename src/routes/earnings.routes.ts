@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CreateEarningController from "../controllers/CreateEarningController";
+import CreateEarningController from "../controllers/Earnings/CreateEarningController";
 
 const earningsRouter = Router();
 

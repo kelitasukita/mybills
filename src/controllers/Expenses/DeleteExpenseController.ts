@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import Expense from "../models/Expense";
+import Expense from "../../models/Expense";
+
 
 class DeleteExpenseController {
 
