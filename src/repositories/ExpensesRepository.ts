@@ -2,7 +2,7 @@ import { EntityRepository, Repository, getRepository, Between, Not, LessThan } f
 
 import Expense from '../models/Expense';
 
-interface Request {
+interface ExpenseData {
   description: string;
   value: number;
   automaticDebit: boolean;
@@ -17,22 +17,12 @@ interface Request {
 
 @EntityRepository(Expense)
 class ExpenseRepository extends Repository<Expense>   {
-  public async createExpense({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense> {
-    const expenseRepository = getRepository(Expense);
+  public async createExpense(data: ExpenseData): Promise<Expense> {
+    // const expenseRepository = getRepository(Expense);
 
-    const expense = await expenseRepository.create({
-      description,
-      value,
-      automaticDebit,
-      dueDate,
-      obs,
-      currentInstallment,
-      installments,
-      paid,
-      recurrent
-    });
+    const expense = await this.create(data);
 
-    return expenseRepository.save(expense);
+    return this.save(expense);
   }
 
   public async manualPayment(): Promise<Expense[]|undefined> {

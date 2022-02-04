@@ -1,5 +1,4 @@
-import { Repository, EntityRepository, getRepository } from "typeorm";
-import { string } from "yup";
+import { Repository, EntityRepository } from "typeorm";
 import Earning from "../models/Earning";
 
 interface EarningData {

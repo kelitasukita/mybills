@@ -1,37 +1,16 @@
-import { Router, request, response } from 'express';
+import { Router } from 'express';
 
-import CreateExpenseService from '../services/CreateExpenseService';
 import Expense from '../models/Expense';
 import { getRepository, getCustomRepository } from 'typeorm';
 import ExpenseRepository from '../repositories/ExpensesRepository';
 import UpdateExpenseService from '../services/UpdateExpenseService';
 import TogglePaidService from '../services/TogglePaidService';
+import CreateExpenseController from '../controllers/CreateExpenseController';
 
 const expensesRouter = Router();
 
 // Criar despesa
-expensesRouter.post('/', async (request, response) => {
-  try {
-    const { description, value, automaticDebit, dueDate, obs, currentInstallment, installments, paid, recurrent } = request.body;
-    const repository = getCustomRepository(ExpenseRepository);
-    const createExpense = new CreateExpenseService(repository);
-
-    const expense = await createExpense.execute({
-      description,
-      value,
-      automaticDebit,
-      dueDate,
-      obs,
-      currentInstallment,
-      installments,
-      paid,
-      recurrent
-    });
-     return response.json(expense);
-  } catch (err) {
-    return response.status(400).json({ error: err.message });
-  }
-});
+expensesRouter.post('/', CreateExpenseController.handle);
 
 // Listar todas as despesas, ganhos e saldo
 expensesRouter.get('/', async (request, response) => {
