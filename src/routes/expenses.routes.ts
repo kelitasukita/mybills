@@ -9,6 +9,7 @@ import GetExpenseController from '../controllers/Expenses/GetExpenseController';
 import EditExpenseController from '../controllers/Expenses/EditExpenseController';
 import PaidExpensesController from '../controllers/Expenses/PaidExpensesController';
 import UnpaidExpensesController from '../controllers/Expenses/UnpaidExpensesController';
+import ToggleExpenseController from '../controllers/Expenses/ToggleExpenseController';
 
 
 const expensesRouter = Router();
@@ -20,6 +21,8 @@ expensesRouter.get('/unpaid', UnpaidExpensesController.handle);
 expensesRouter.get('/paid', PaidExpensesController.handle);
 expensesRouter.get('/:id', GetExpenseController.handle);
 expensesRouter.put('/:id', EditExpenseController.handle);
+// Marcar como paga ou não paga
+expensesRouter.patch('/:id/toggle', ToggleExpenseController.handle);
 
 // Listar todas as despesas, ganhos e saldo
 expensesRouter.get('/', async (request, response) => {
@@ -34,24 +37,6 @@ expensesRouter.get('/', async (request, response) => {
 });
 
 
-
-// Marcar como paga ou não paga
-expensesRouter.patch('/:id/toggle', async (request, response) => {
-  const id = request.params.id;
-
-  const repository = getCustomRepository(ExpenseRepository);
-
-  const service = new TogglePaidService(repository);
-
-  try {
-    const executionResponse = await service.execute(id);
-    return response.json(executionResponse);
-  } catch(error: any) {
-    return response.status(400).json({ error: error.message });
-  }
-});
-
-// Editar uma despesa
 
 
 
