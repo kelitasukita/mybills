@@ -6,6 +6,7 @@ import ExpenseRepository from '../repositories/ExpensesRepository';
 import UpdateExpenseService from '../services/UpdateExpenseService';
 import TogglePaidService from '../services/TogglePaidService';
 import CreateExpenseController from '../controllers/CreateExpenseController';
+import DeleteExpenseController from '../controllers/DeleteExpenseController';
 
 const expensesRouter = Router();
 
@@ -52,15 +53,7 @@ expensesRouter.get('/:id', async (request, response) => {
 });
 
 // Deletar uma despesa
-expensesRouter.delete('/:id', async (request, response) => {
-  try {
-    const expensesDelete = await getRepository(Expense).delete(request.params.id)
-
-    return response.json({ message: 'Expense successfully deleted.'});
-  } catch {
-    return response.status(400).json({ message: 'Fail to delete expense.'});
-  }
-});
+expensesRouter.delete('/:id', DeleteExpenseController.handle);
 
 // Marcar como paga ou não paga
 expensesRouter.patch('/:id/toggle', async (request, response) => {
