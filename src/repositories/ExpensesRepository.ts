@@ -65,16 +65,12 @@ class ExpenseRepository extends Repository<Expense>   {
     return allExpenses;
   }
 
-  public async unpaid(): Promise<Expense[] | undefined> {
-
-    const today = new Date();
-    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
-
+  public async unpaid(from: Date, to: Date): Promise<Expense[] | undefined> {
     const allExpenses = await this.find({
       select: [ 'id','description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
       where: {
         paid: false,
-        dueDate: LessThan(lastDayOfMonth)
+        dueDate: Between(from, to)
       },
       order: {
         dueDate: "ASC",
@@ -85,16 +81,13 @@ class ExpenseRepository extends Repository<Expense>   {
     return allExpenses;
   }
 
-  public async paid(): Promise<Expense[] | undefined> {
-
-    const today = new Date();
-    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+  public async paid(from: Date, to: Date): Promise<Expense[] | undefined> {
 
     const allExpenses = await this.find({
       select: [ 'id','description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
       where: {
         paid: true,
-        dueDate: LessThan(lastDayOfMonth)
+        dueDate: Between(from, to)
       },
       order: {
         dueDate: "ASC",

@@ -14,18 +14,18 @@ class OverviewController {
     let endDate = new Date();
 
     if (today.getDate() > 24) {
-      firstDay = new Date(today.getFullYear(), today.getMonth(), 24); // mês atual
-      endDate = new Date(today.getFullYear(), today.getMonth()+1, 23); // mês seguinte
+      firstDay = new Date(today.getFullYear(), today.getMonth(), 23); // mês atual
+      endDate = new Date(today.getFullYear(), today.getMonth()+1, 22); // mês seguinte
     } else {
-      firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 24); // mês anterior
-      endDate = new Date(today.getFullYear(), today.getMonth(), 23); // mês atual
+      firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 23); // mês anterior
+      endDate = new Date(today.getFullYear(), today.getMonth(), 22); // mês atual
     }
 
     if (year && month) {
       today = new Date(+year, +month - 1);
 
-      firstDay = new Date(today.getFullYear(), today.getMonth(), 24);
-      endDate = new Date(today.getFullYear(), today.getMonth() + 1, 23);
+      firstDay = new Date(today.getFullYear(), today.getMonth(), 23);
+      endDate = new Date(today.getFullYear(), today.getMonth() + 1, 22);
     }
 
     const earningsRepo = getCustomRepository(EarningsRepository);

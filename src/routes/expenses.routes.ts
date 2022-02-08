@@ -21,20 +21,19 @@ expensesRouter.get('/unpaid', UnpaidExpensesController.handle);
 expensesRouter.get('/paid', PaidExpensesController.handle);
 expensesRouter.get('/:id', GetExpenseController.handle);
 expensesRouter.put('/:id', EditExpenseController.handle);
-// Marcar como paga ou não paga
 expensesRouter.patch('/:id/toggle', ToggleExpenseController.handle);
 
 // Listar todas as despesas, ganhos e saldo
-expensesRouter.get('/', async (request, response) => {
-  const expenseRepository = getCustomRepository(ExpenseRepository);
+// expensesRouter.get('/', async (request, response) => {
+//   const expenseRepository = getCustomRepository(ExpenseRepository);
 
-  return response.json({
-    overview: {},
-    manualPayments: await expenseRepository.manualPayment(),
-    automaticPayments: await expenseRepository.automaticPayments(),
-    allPayments: await expenseRepository.allPayments()
-  });
-});
+//   return response.json({
+//     overview: {},
+//     manualPayments: await expenseRepository.manualPayment(),
+//     automaticPayments: await expenseRepository.automaticPayments(),
+//     allPayments: await expenseRepository.allPayments()
+//   });
+// });
 
 
 
