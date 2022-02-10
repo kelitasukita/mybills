@@ -1,6 +1,7 @@
 import { EntityRepository, Repository, getRepository, Between, Not, LessThan } from 'typeorm';
 
 import Expense from '../models/Expense';
+import ExpenseInstallmentsService from '../services/ExpenseInstallmentsService';
 
 interface ExpenseData {
   description: string;
@@ -17,10 +18,15 @@ interface ExpenseData {
 
 @EntityRepository(Expense)
 class ExpenseRepository extends Repository<Expense>   {
-  public async createExpense(data: ExpenseData): Promise<Expense> {
-    // const expenseRepository = getRepository(Expense);
 
-    const expense = await this.create(data);
+  public async createExpense(data: ExpenseData): Promise<Expense> {
+    const expenses = [await this.create(data)];
+
+    if (data.installments > 0) {
+      const installmentsService = new ExpenseInstallmentsService(this);
+      installmentsService.execute(data);
+      expenses.concat()
+    }
 
     return this.save(expense);
   }
