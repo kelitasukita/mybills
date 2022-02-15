@@ -1,21 +1,21 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('cards-expenses')
-class CardExpense {
+@Entity('creditcards')
+class CreditCard {
   @PrimaryGeneratedColumn('uuid')
   id: String;
 
   @Column('varchar')
-  name: string;
-
-  @Column('date')
-  purchaseDate: Date;
+  brand: string;
 
   @Column('varchar')
-  description: string;
+  name: string;
+
+  @Column('integer')
+  dueDay: Number;
 
   @Column('decimal', { precision: 10, scale: 2 })
-  value: Number;
+  limit: Number;
 
   @CreateDateColumn()
   created_at: Date;
@@ -24,4 +24,4 @@ class CardExpense {
   updated_at: Date;
 }
 
-export default CardExpense;
+export default CreditCard;
