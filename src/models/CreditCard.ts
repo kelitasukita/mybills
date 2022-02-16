@@ -12,7 +12,7 @@ class CreditCard {
   name: string;
 
   @Column('integer')
-  dueDay: Number;
+  due_day: Number;
 
   @Column('decimal', { precision: 10, scale: 2 })
   limit: Number;
