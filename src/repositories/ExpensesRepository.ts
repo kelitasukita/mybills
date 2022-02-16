@@ -16,7 +16,7 @@ interface ExpenseData {
 }
 
 @EntityRepository(Expense)
-class ExpenseRepository extends Repository<Expense>   {
+class ExpenseRepository extends Repository<Expense> {
   public async createExpense(data: ExpenseData): Promise<Expense> {
     // const expenseRepository = getRepository(Expense);
 
