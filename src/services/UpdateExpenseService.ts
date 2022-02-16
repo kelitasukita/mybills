@@ -3,7 +3,6 @@ import { addMonths } from 'date-fns';
 
 import Expense from "../models/Expense";
 import ExpensesRepository from '../repositories/ExpensesRepository';
-import { Not } from 'typeorm';
 
 interface Request {
   description: string;
