@@ -1,8 +1,5 @@
 import { Router } from 'express';
 
-import { getCustomRepository } from 'typeorm';
-import ExpenseRepository from '../repositories/ExpensesRepository';
-import TogglePaidService from '../services/TogglePaidService';
 import CreateExpenseController from '../controllers/Expenses/CreateExpenseController';
 import DeleteExpenseController from '../controllers/Expenses/DeleteExpenseController';
 import GetExpenseController from '../controllers/Expenses/GetExpenseController';
