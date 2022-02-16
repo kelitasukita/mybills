@@ -1,10 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import ExpenseType from './ExpenseType';
 
 @Entity('expenses')
 class Expense {
   @PrimaryGeneratedColumn('uuid')
   id: String;
 
+  @ManyToOne(() => ExpenseType)
+  expenseType: ExpenseType;
+ 
   @Column('varchar')
   description: String;
 
