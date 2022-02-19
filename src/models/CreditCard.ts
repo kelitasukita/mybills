@@ -24,4 +24,4 @@ class CreditCard {
   updated_at: Date;
 }
 
-export default CreditCard
+export default CreditCard;

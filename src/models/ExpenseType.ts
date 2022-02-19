@@ -10,7 +10,7 @@ class ExpenseType {
   label: string;
 
   @OneToOne(() => CreditCard)
-  @JoinColumn({ name: 'creditcard_id'})
+  @JoinColumn({ name: 'creditcard_id' })
   creditcard: CreditCard;
 
   @CreateDateColumn()
