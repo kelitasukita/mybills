@@ -20,20 +20,4 @@ expensesRouter.get('/:id', GetExpenseController.handle);
 expensesRouter.put('/:id', EditExpenseController.handle);
 expensesRouter.patch('/:id/toggle', ToggleExpenseController.handle);
 
-// Listar todas as despesas, ganhos e saldo
-// expensesRouter.get('/', async (request, response) => {
-//   const expenseRepository = getCustomRepository(ExpenseRepository);
-
-//   return response.json({
-//     overview: {},
-//     manualPayments: await expenseRepository.manualPayment(),
-//     automaticPayments: await expenseRepository.automaticPayments(),
-//     allPayments: await expenseRepository.allPayments()
-//   });
-// });
-
-
-
-
-
 export default expensesRouter;
