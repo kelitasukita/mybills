@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository, Between, Not, LessThan } from 'typeorm';
+import { EntityRepository, Repository, Between, Not } from 'typeorm';
 
 import Expense from '../models/Expense';
 
@@ -18,6 +18,7 @@ interface ExpenseData {
 @EntityRepository(Expense)
 class ExpenseRepository extends Repository<Expense> {
   public async createExpense(data: ExpenseData): Promise<Expense> {
+
     // const expenseRepository = getRepository(Expense);
 
     const expense = await this.create(data);

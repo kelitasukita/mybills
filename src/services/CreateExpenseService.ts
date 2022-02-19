@@ -1,7 +1,7 @@
-import *as Yup from 'yup';
 import { addMonths } from 'date-fns';
+import * as Yup from 'yup';
 
-import Expense from "../models/Expense";
+import Expense from '../models/Expense';
 import ExpensesRepository from '../repositories/ExpensesRepository';
 
 interface Request {
@@ -14,7 +14,6 @@ interface Request {
   installments: bigint;
   paid: boolean;
   recurrent: boolean;
-
 }
 
 class CreateExpenseService {
@@ -24,7 +23,17 @@ class CreateExpenseService {
     this.expensesRepository = repository;
   }
 
-  public async execute({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }: Request): Promise<Expense[] | null> {
+  public async execute({
+    description,
+    value,
+    automaticDebit,
+    dueDate,
+    obs,
+    currentInstallment,
+    installments,
+    paid,
+    recurrent,
+  }: Request): Promise<Expense[] | null> {
     const schema = Yup.object().shape({
       description: Yup.string().required(),
       value: Yup.number().required(),
@@ -34,23 +43,35 @@ class CreateExpenseService {
       currentInstallment: Yup.number().integer(),
       installments: Yup.number().integer(),
       paid: Yup.boolean(),
-      recurrent: Yup.boolean().required()
+      recurrent: Yup.boolean().required(),
     });
 
-    if(!(await schema.isValid({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }))) {
-      throw Error('Validation Failed')
+    if (
+      !(await schema.isValid({
+        description,
+        value,
+        automaticDebit,
+        dueDate,
+        obs,
+        currentInstallment,
+        installments,
+        paid,
+        recurrent,
+      }))
+    ) {
+      throw Error('Validation Failed');
     }
 
-    if(await this.expensesRepository.isDuplicated(description, value, dueDate)) {
+    if (await this.expensesRepository.isDuplicated(description, value, dueDate)) {
       throw Error(`The expense ${description} with value ${value} on this date already exists`);
     }
 
     const expenses = [];
 
-    if(installments > 1) {
-      var monthsToAdd = 0;
+    if (installments > 1) {
+      let monthsToAdd = 0;
       for (let i = currentInstallment; i <= installments; ++i) {
-        let currentExpense = await this.expensesRepository.createExpense({
+        const currentExpense = await this.expensesRepository.createExpense({
           description,
           value,
           automaticDebit,
@@ -59,7 +80,7 @@ class CreateExpenseService {
           currentInstallment: i,
           installments,
           paid,
-          recurrent
+          recurrent,
         });
 
         paid = false;
@@ -76,7 +97,7 @@ class CreateExpenseService {
         currentInstallment,
         installments,
         paid,
-        recurrent
+        recurrent,
       });
 
       expenses.push(expense);
@@ -85,6 +106,5 @@ class CreateExpenseService {
     return expenses;
   }
 }
-
 
 export default CreateExpenseService;

@@ -1,4 +1,4 @@
-import CreditCard from "../models/CreditCard";
+import CreditCard from '../models/CreditCard';
 import CreditCardRepository from '../repositories/CreditCardRepository';
 
 interface CreditCardData {
@@ -6,7 +6,6 @@ interface CreditCardData {
   name: string;
   due_day: bigint;
   limit: number;
-
 }
 
 class CreateCreditCardService {
@@ -17,12 +16,10 @@ class CreateCreditCardService {
   }
 
   public async execute(data: CreditCardData): Promise<CreditCard | null> {
-
     const creditcard = await this.creditcardRepository.createCreditCard(data);
 
     return creditcard;
   }
-
 }
 
 export default CreateCreditCardService;

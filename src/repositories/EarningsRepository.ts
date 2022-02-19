@@ -13,7 +13,7 @@ class EarningsRepository extends Repository<Earning> {
 
   public async createEarning(dados: EarningData): Promise<Earning> {
 
-    const earning = await this.create(dados);
+    const earning = await this.create(dados)
 
     return await this.save(earning);
   }
