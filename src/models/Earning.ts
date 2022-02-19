@@ -20,4 +20,5 @@ class Earning {
   @UpdateDateColumn()
   updated_at: Date;
 }
+
 export default Earning;

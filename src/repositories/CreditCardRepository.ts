@@ -13,7 +13,7 @@ interface CreditCardData {
 class CreditCardRepository extends Repository<CreditCard> {
   public async createCreditCard(data: CreditCardData): Promise<CreditCard> {
 
-    const creditcard = this.create(data);
+    const creditcard = await this.create(data);
 
     return this.save(creditcard);
   }

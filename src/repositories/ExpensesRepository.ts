@@ -19,14 +19,12 @@ interface ExpenseData {
 class ExpenseRepository extends Repository<Expense> {
   public async createExpense(data: ExpenseData): Promise<Expense> {
 
-    // const expenseRepository = getRepository(Expense);
-
     const expense = await this.create(data);
 
     return this.save(expense);
   }
 
-  public async manualPayment(): Promise<Expense[]|undefined> {
+  public async manualPayment(): Promise<Expense[] | undefined> {
     const expenses = await this.find({
       select: ["id", "description", "dueDate", "paid", "value"],
       where: { automaticDebit: false },
@@ -39,7 +37,7 @@ class ExpenseRepository extends Repository<Expense> {
   }
 
 
-  public async automaticPayments(): Promise<Expense[]|undefined> {
+  public async automaticPayments(): Promise<Expense[] | undefined> {
     const expenses = await this.find({
       select: ["id", "description", "paid", "value", "dueDate"],
       where: { automaticDebit: true },
@@ -52,10 +50,9 @@ class ExpenseRepository extends Repository<Expense> {
     return expenses;
   }
 
-
   public async allPayments(): Promise<Expense[] | undefined> {
     const allExpenses = await this.find({
-      select: [ 'id','description', 'paid', 'value', 'currentInstallment', 'installments'],
+      select: ['id', 'description', 'paid', 'value', 'currentInstallment', 'installments'],
       order: {
         paid: 'DESC',
         dueDate: "ASC",
@@ -68,7 +65,7 @@ class ExpenseRepository extends Repository<Expense> {
 
   public async unpaid(from: Date, to: Date): Promise<Expense[] | undefined> {
     const allExpenses = await this.find({
-      select: [ 'id','description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
+      select: ['id', 'description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
       where: {
         paid: false,
         dueDate: Between(from, to)
@@ -85,7 +82,7 @@ class ExpenseRepository extends Repository<Expense> {
   public async paid(from: Date, to: Date): Promise<Expense[] | undefined> {
 
     const allExpenses = await this.find({
-      select: [ 'id','description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
+      select: ['id', 'description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
       where: {
         paid: true,
         dueDate: Between(from, to)
@@ -99,7 +96,7 @@ class ExpenseRepository extends Repository<Expense> {
     return allExpenses;
   }
 
-  public async isDuplicated(description: string, value: number, dueDate:Date ): Promise<Expense | undefined> {
+  public async isDuplicated(description: string, value: number, dueDate: Date): Promise<Expense | undefined> {
 
     const expense = await this.findOne({
       where: {
@@ -112,7 +109,7 @@ class ExpenseRepository extends Repository<Expense> {
     return expense;
   }
 
-  public async isDuplicatedButNotMe(id:string, description: string, value: number, dueDate:Date ): Promise<Expense | undefined> {
+  public async isDuplicatedButNotMe(id: string, description: string, value: number, dueDate: Date): Promise<Expense | undefined> {
 
     const expense = await this.findOne({
       where: {
@@ -126,6 +123,5 @@ class ExpenseRepository extends Repository<Expense> {
     return expense;
   }
 }
-
 
 export default ExpenseRepository;
