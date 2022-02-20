@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import ExpenseType from './ExpenseType';
 
 @Entity('expenses')
@@ -7,8 +7,9 @@ class Expense {
   id: String;
 
   @ManyToOne(() => ExpenseType)
+  @JoinColumn({ name: 'expense_type_id' })
   expenseType: ExpenseType;
- 
+
   @Column('varchar')
   description: String;
 
