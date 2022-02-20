@@ -19,9 +19,9 @@ interface ExpenseData {
 class ExpenseRepository extends Repository<Expense> {
   public async createExpense(data: ExpenseData): Promise<Expense> {
 
-    const expense = await this.create(data);
+    const expense = this.create(data);
 
-    return this.save(expense);
+    return await this.save(expense);
   }
 
   public async manualPayment(): Promise<Expense[] | undefined> {
