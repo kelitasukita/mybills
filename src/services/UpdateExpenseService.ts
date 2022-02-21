@@ -23,9 +23,17 @@ class UpdateExpenseService {
     this.repository = expensesRepository;
   }
 
-  public async execute(id: string, dados: Request): Promise<Expense[] | null> {
-
-    const { description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent } = dados;
+  public async execute(id: string, {
+    description,
+    value,
+    automaticDebit,
+    dueDate,
+    obs,
+    currentInstallment,
+    installments,
+    paid,
+    recurrent,
+  }: Request): Promise<Expense[] | null> {
 
     // Validação dos campos
     const schema = Yup.object().shape({
@@ -40,7 +48,7 @@ class UpdateExpenseService {
       recurrent: Yup.boolean().required()
     });
 
-    if(!(await schema.isValid({ description, value, automaticDebit, dueDate, obs, currentInstallment,  installments, paid, recurrent }))) {
+    if (!(await schema.isValid({ description, value, automaticDebit, dueDate, obs, currentInstallment, installments, paid, recurrent }))) {
       throw Error('Validation Failed')
     }
 
@@ -48,7 +56,7 @@ class UpdateExpenseService {
     const expenseToBeUpdated = await this.repository.findOneOrFail(id);
 
     // Checar duplicados mas não checar no registro em edição
-    if(await this.repository.isDuplicatedButNotMe(id, description, value, dueDate)) {
+    if (await this.repository.isDuplicatedButNotMe(id, description, value, dueDate)) {
       throw Error(`The expense ${description} with value ${value} on this date already exists`);
     }
 
@@ -56,7 +64,7 @@ class UpdateExpenseService {
 
     const expenses = [];
 
-    if(installments > 1 || installments != expenseToBeUpdated.installments) {
+    if (installments > 1 || installments != expenseToBeUpdated.installments) {
       await this.repository.delete({
         description: expenseToBeUpdated.description,
         value: expenseToBeUpdated.value,
@@ -76,6 +84,8 @@ class UpdateExpenseService {
           paid,
           recurrent
         });
+
+        paid = false;
 
         expenses.push(currentExpense);
       }
