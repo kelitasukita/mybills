@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, Between, Not } from 'typeorm';
+import { EntityRepository, Repository, Between, Not, LessThan } from 'typeorm';
 
 import Expense from '../models/Expense';
 
@@ -66,10 +66,16 @@ class ExpenseRepository extends Repository<Expense> {
   public async unpaid(from: Date, to: Date): Promise<Expense[] | undefined> {
     const allExpenses = await this.find({
       select: ['id', 'description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
-      where: {
-        paid: false,
-        dueDate: Between(from, to)
-      },
+      where: [
+        {
+          paid: false,
+          dueDate: Between(from, to)
+        },
+        {
+          paid: false,
+          dueDate: LessThan(to)
+        },
+      ],
       order: {
         dueDate: "ASC",
         value: "DESC"
