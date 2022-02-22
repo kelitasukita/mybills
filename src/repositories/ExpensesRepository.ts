@@ -73,7 +73,7 @@ class ExpenseRepository extends Repository<Expense> {
         },
         {
           paid: false,
-          dueDate: LessThan(to)
+          dueDate: LessThan(new Date())
         },
       ],
       order: {
