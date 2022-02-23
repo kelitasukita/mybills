@@ -42,6 +42,8 @@ class Expense {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  overdue: boolean = false;
 }
 
 export default Expense;
