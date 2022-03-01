@@ -30,6 +30,7 @@ class UnpaidExpensesController {
     const expenses = await expenseRepository.unpaid(from, to);
 
     let total: Number = 0 as Number;
+    let totalMonth: Number = 0 as Number;
     let totalOverdue: Number = 0 as Number;
 
     if (expenses) {
@@ -37,18 +38,22 @@ class UnpaidExpensesController {
         expense.overdue = new Date(expense.dueDate) < from;
         if (expense.overdue) {
           totalOverdue = +totalOverdue + Number(expense.value);
+        } else {
+          totalMonth = +totalMonth + Number(expense.value);
         }
         total = +total + Number(expense.value);
       });
 
       total = +total.toFixed(2);
+      totalMonth = +totalMonth.toFixed(2);
       totalOverdue = +totalOverdue.toFixed(2);
     }
 
     return response.json({
       data: expenses,
       total,
-      totalOverdue
+      totalOverdue,
+      totalMonth
     });
   }
 }
