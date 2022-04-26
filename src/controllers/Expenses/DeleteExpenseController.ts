@@ -8,16 +8,22 @@ class DeleteExpenseController {
   async handle(request: Request, response: Response) {
     const repository = getRepository(Expense);
 
+    const { id } = request.params;
+
     try {
-      const { description, value, installments, created_at } = await repository.findOneOrFail(request.params.id);
+      const { description, value, installments, created_at } = await repository.findOneOrFail(id);
 
-      const deleted = await repository.delete({
-        description,
-        value,
-        installments,
-        // created_at / TODO: Resolving how to use date criteria
-      });
-
+      if (installments != 0) {
+        await repository.delete({
+          description,
+          value,
+          installments,
+          // created_at / TODO: Resolving how to use date criteria
+        });
+      } else {
+        await repository.delete({ id });
+      }
+      
       return response.json({ message: 'Expense successfully deleted.' });
 
     } catch (error: any) {
