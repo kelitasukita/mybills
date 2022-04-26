@@ -26,10 +26,10 @@ class Expense {
   obs: String;
 
   @Column('int')
-  currentInstallment: BigInt;
+  currentInstallment: number;
 
   @Column('int')
-  installments: BigInt;
+  installments: number;
 
   @Column('boolean')
   paid: boolean;
