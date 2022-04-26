@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 
 import CreateExpenseController from '../controllers/Expenses/CreateExpenseController';
 import DeleteExpenseController from '../controllers/Expenses/DeleteExpenseController';
@@ -7,6 +7,9 @@ import EditExpenseController from '../controllers/Expenses/EditExpenseController
 import PaidExpensesController from '../controllers/Expenses/PaidExpensesController';
 import UnpaidExpensesController from '../controllers/Expenses/UnpaidExpensesController';
 import ToggleExpenseController from '../controllers/Expenses/ToggleExpenseController';
+import { getCustomRepository } from 'typeorm';
+import ExpenseRepository from '../repositories/ExpensesRepository';
+import axios from 'axios';
 
 
 const expensesRouter = Router();
@@ -14,10 +17,32 @@ const expensesRouter = Router();
 
 expensesRouter.post('/', CreateExpenseController.handle);
 expensesRouter.delete('/:id', DeleteExpenseController.handle);
-expensesRouter.get('/unpaid', UnpaidExpensesController.handle);
+
+expensesRouter.get('/unpaid', async (req: Request, res: Response, next) => {
+  const {year, month} = req.query;
+
+  const expenseRepository = getCustomRepository(ExpenseRepository);
+  await expenseRepository.generateMissingRecurrent(year, month);
+
+  next();
+
+}, UnpaidExpensesController.handle);
+
 expensesRouter.get('/paid', PaidExpensesController.handle);
 expensesRouter.get('/:id', GetExpenseController.handle);
 expensesRouter.put('/:id', EditExpenseController.handle);
 expensesRouter.patch('/:id/toggle', ToggleExpenseController.handle);
+
+expensesRouter.get('/test/wise', async (req, res) => {
+  
+  const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
+    "targetAmount":2334,
+    "sourceCurrency":"EUR",
+    "targetCurrency":"BRL",
+    "preferredPayIn":"BANK_TRANSFER"
+  });
+
+  return res.json(response.data);
+})
 
 export default expensesRouter;
