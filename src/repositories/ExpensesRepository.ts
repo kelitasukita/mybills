@@ -8,11 +8,10 @@ interface ExpenseData {
   automaticDebit: boolean;
   dueDate: Date;
   obs: string;
-  currentInstallment: bigint;
-  installments: bigint;
+  currentInstallment: number;
+  installments: number;
   paid: boolean;
   recurrent: boolean;
-
 }
 
 @EntityRepository(Expense)
@@ -127,6 +126,85 @@ class ExpenseRepository extends Repository<Expense> {
     });
 
     return expense;
+  }
+
+  public async generateMissingRecurrent(year:number, month:number): Promise<Expense[] | undefined> {
+    const today = new Date();
+    const requestDate = new Date(year, (month - 1), 24, 0, 0, 0); // PQ ESSES ZEROS DEPOIS DO 24?
+
+
+    const from = new Date(year, month -1, 24);
+    const to = new Date(year, month, 23);
+
+    // console.log(year, month, today, requestDate, 'from e to: ',  from, to);
+
+    // @todo verificar como criar os registros de recurrent que faltam pros meses já visitados 
+    const hasRecurrent = await this.findOne({ 
+      where: { 
+        recurrent: true,
+        dueDate: Between(from, to)
+      }
+    });
+
+    if (hasRecurrent) { // Verifica se não tem recurrent, se tiver não gera nada
+      // PRECISO VERIFICAR SE TEM RECURRENT, SE TIVER VERIFICO SE TODAS AS ATUAIS SÃO IGUAIS ÀS DOS  
+      // MESES ANTERIORES, SE NÃO FOREM ADD AS NOVAS RECURRENTS. 
+      return;
+    }
+
+    // Busca os recurrents menores que o from
+    const recurrents = await this.createQueryBuilder('expenses')
+      .distinct()
+      .select('description')
+      .addSelect('value')
+      .addSelect('MAX("dueDate")', 'duedate')
+      .where('recurrent = :value', { value: true })
+      .andWhere('"dueDate" < :from', { from })
+      .groupBy('description')
+      .addGroupBy('value')
+      .orderBy('duedate', 'DESC')
+      .getRawMany();
+
+    // console.log(recurrents);
+
+    const recurrentCreated: any[] = [];
+
+    await Promise.all(
+      recurrents.map(async bill => {
+        if (recurrentCreated.indexOf(bill.description) == -1) { // se não foi gerado, gerar
+
+          recurrentCreated.push(bill.description); // Alimentando array com a description pra ser gerada
+
+          const newMonth = (bill.duedate.getDate() > 23) ? month - 1 : month; // calculo do novo mês 
+          const newDueDate = new Date(year, newMonth, bill.duedate.getDate()); // calculo da data de vencimento
+
+          // verificar se já existe no banco
+          const exists = await this.findOne({
+            where: { 
+              description: bill.description,
+              recurrent: true,
+              dueDate: Between(from, to)
+            }
+          });
+
+          if (!exists) { // se não existir
+            // Posso criar
+            await this.createExpense({
+              description: bill.description,
+              value: +bill.value,
+              automaticDebit: true,
+              dueDate: newDueDate,
+              paid: false,
+              recurrent: true,
+              obs: '',
+              currentInstallment: 0,
+              installments: 0
+            });
+          }
+          
+        }
+      })
+    );    
   }
 }
 
