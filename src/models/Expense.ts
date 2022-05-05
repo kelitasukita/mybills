@@ -41,7 +41,7 @@ class Expense {
   recurrent: boolean;
 
   @Column('boolean')
-  currency: boolean;
+  currency: String;
 
   @CreateDateColumn()
   created_at: Date;
