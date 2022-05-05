@@ -6,6 +6,9 @@ class Earning {
   id: String;
 
   @Column('varchar')
+  userId: String;
+  
+  @Column('varchar')
   description: String;
 
   @Column('decimal', { precision: 10, scale: 2 })

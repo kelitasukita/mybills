@@ -6,6 +6,9 @@ class Expense {
   @PrimaryGeneratedColumn('uuid')
   id: String;
 
+  @Column('varchar')
+  userId: String;
+
   @ManyToOne(() => ExpenseType)
   @JoinColumn({ name: 'expense_type_id' })
   expenseType: ExpenseType;
@@ -36,6 +39,9 @@ class Expense {
 
   @Column('boolean')
   recurrent: boolean;
+
+  @Column('boolean')
+  currency: boolean;
 
   @CreateDateColumn()
   created_at: Date;
