@@ -130,7 +130,7 @@ class ExpenseRepository extends Repository<Expense> {
 
   public async generateMissingRecurrent(year:number, month:number): Promise<Expense[] | undefined> {
     const today = new Date();
-    const requestDate = new Date(year, (month - 1), 24, 0, 0, 0); // PQ ESSES ZEROS DEPOIS DO 24?
+    const requestDate = new Date(year, (month - 1), 24, 0, 0, 0); // Ano mês dia, Hora, minuto e segundo
 
 
     const from = new Date(year, month -1, 24);
