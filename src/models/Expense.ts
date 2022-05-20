@@ -7,7 +7,7 @@ class Expense {
   id: String;
 
   @Column('varchar')
-  userId: String;
+  userId: String = "117908811566542498391";
 
   @ManyToOne(() => ExpenseType)
   @JoinColumn({ name: 'expense_type_id' })
@@ -50,6 +50,8 @@ class Expense {
   updated_at: Date;
 
   overdue: boolean = false;
+
+  exchangedValue: number = 0;
 }
 
 export default Expense;

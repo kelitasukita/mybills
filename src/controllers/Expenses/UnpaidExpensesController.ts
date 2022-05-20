@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
 import ExpenseRepository from "../../repositories/ExpensesRepository";
@@ -34,7 +35,7 @@ class UnpaidExpensesController {
     let totalOverdue: Number = 0 as Number;
 
     if (expenses) {
-      expenses.map(expense => {
+      await Promise.all(expenses.map(async expense => {
         expense.overdue = new Date(expense.dueDate) < from;
         if (expense.overdue) {
           totalOverdue = +totalOverdue + Number(expense.value);
@@ -42,7 +43,20 @@ class UnpaidExpensesController {
           totalMonth = +totalMonth + Number(expense.value);
         }
         total = +total + Number(expense.value);
-      });
+
+        
+        if (expense.currency !== "EUR") { 
+          
+          const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
+            "targetAmount": expense.value,
+            "sourceCurrency": "EUR", // @todo Mudar isso para o currency padrão do usuário
+            "targetCurrency": expense.currency,
+            "preferredPayIn":"BANK_TRANSFER"
+          });
+          
+          expense.exchangedValue = response.data.paymentOptions[0].sourceAmount;
+        }
+      }));
 
       total = +total.toFixed(2);
       totalMonth = +totalMonth.toFixed(2);

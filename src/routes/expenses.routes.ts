@@ -36,13 +36,18 @@ expensesRouter.patch('/:id/toggle', ToggleExpenseController.handle);
 expensesRouter.get('/test/wise', async (req, res) => {
   
   const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
-    "targetAmount":2334,
+    "targetAmount":req.query.valor,
     "sourceCurrency":"EUR",
     "targetCurrency":"BRL",
     "preferredPayIn":"BANK_TRANSFER"
   });
 
-  return res.json(response.data);
+  const inEuro = response.data.paymentOptions[0].sourceAmount;
+
+  return res.json({ 
+    brl: +req.query.valor,
+    eur: inEuro
+  });
 })
 
 export default expensesRouter;

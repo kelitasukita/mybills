@@ -64,7 +64,7 @@ class ExpenseRepository extends Repository<Expense> {
 
   public async unpaid(from: Date, to: Date): Promise<Expense[] | undefined> {
     const allExpenses = await this.find({
-      select: ['id', 'description', 'paid', 'value', 'dueDate', 'currentInstallment', 'installments'],
+      select: ['id', 'description', 'paid', 'currency', 'value', 'dueDate', 'currentInstallment', 'installments'],
       where: [
         {
           paid: false,

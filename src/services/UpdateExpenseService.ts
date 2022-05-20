@@ -6,6 +6,7 @@ import ExpensesRepository from '../repositories/ExpensesRepository';
 
 interface Request {
   description: string;
+  currency: string;
   value: number;
   automaticDebit: boolean;
   dueDate: Date;
@@ -25,6 +26,7 @@ class UpdateExpenseService {
 
   public async execute(id: string, {
     description,
+    currency,
     value,
     automaticDebit,
     dueDate,
@@ -38,6 +40,7 @@ class UpdateExpenseService {
     // Validação dos campos
     const schema = Yup.object().shape({
       description: Yup.string().required(),
+      currency: Yup.string().required(),
       value: Yup.number().required(),
       automaticDebit: Yup.boolean().required(),
       dueDate: Yup.date().required(),
@@ -48,7 +51,7 @@ class UpdateExpenseService {
       recurrent: Yup.boolean().required()
     });
 
-    if (!(await schema.isValid({ description, value, automaticDebit, dueDate, obs, currentInstallment, installments, paid, recurrent }))) {
+    if (!(await schema.isValid({ description, currency, value, automaticDebit, dueDate, obs, currentInstallment, installments, paid, recurrent }))) {
       throw Error('Validation Failed')
     }
 
@@ -75,6 +78,7 @@ class UpdateExpenseService {
       for (let i = currentInstallment; i <= installments; ++i) {
         let currentExpense = await this.repository.createExpense({
           description,
+          currency,
           value,
           automaticDebit,
           dueDate: addMonths(new Date(dueDate), monthsToAdd++),
@@ -92,6 +96,7 @@ class UpdateExpenseService {
     } else {
       await this.repository.update(id, {
         description,
+        currency,
         value,
         automaticDebit,
         dueDate,

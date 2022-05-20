@@ -9,6 +9,7 @@ class EditExpenseController {
 
     const {
       description,
+      currency,
       value,
       automaticDebit,
       dueDate,
@@ -27,6 +28,7 @@ class EditExpenseController {
 
     const dadosParaEdicao = {
       description,
+      currency,
       value,
       automaticDebit,
       dueDate,

@@ -6,6 +6,7 @@ import ExpensesRepository from '../repositories/ExpensesRepository';
 
 interface Request {
   description: string;
+  currency: string;
   value: number;
   automaticDebit: boolean;
   dueDate: Date;
@@ -25,6 +26,7 @@ class CreateExpenseService {
 
   public async execute({
     description,
+    currency,
     value,
     automaticDebit,
     dueDate,
@@ -36,6 +38,7 @@ class CreateExpenseService {
   }: Request): Promise<Expense[] | null> {
     const schema = Yup.object().shape({
       description: Yup.string().required(),
+      currency: Yup.string().required(),
       value: Yup.number().required(),
       automaticDebit: Yup.boolean().required(),
       dueDate: Yup.date().required(),
@@ -49,6 +52,7 @@ class CreateExpenseService {
     if (
       !(await schema.isValid({
         description,
+        currency,
         value,
         automaticDebit,
         dueDate,
@@ -73,6 +77,7 @@ class CreateExpenseService {
       for (let i = currentInstallment; i <= installments; ++i) {
         const currentExpense = await this.expensesRepository.createExpense({
           description,
+          currency,
           value,
           automaticDebit,
           dueDate: addMonths(new Date(dueDate), monthsToAdd++),
@@ -90,6 +95,7 @@ class CreateExpenseService {
     } else {
       const expense = await this.expensesRepository.createExpense({
         description,
+        currency,
         value,
         automaticDebit,
         dueDate,

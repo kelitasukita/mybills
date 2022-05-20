@@ -6,7 +6,7 @@ class Earning {
   id: String;
 
   @Column('varchar')
-  userId: String;
+  userId: String = "117908811566542498391";
   
   @Column('varchar')
   description: String;
