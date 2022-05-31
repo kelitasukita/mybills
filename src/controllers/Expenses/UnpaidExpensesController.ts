@@ -37,13 +37,6 @@ class UnpaidExpensesController {
     if (expenses) {
       await Promise.all(expenses.map(async expense => {
         expense.overdue = new Date(expense.dueDate) < from;
-        if (expense.overdue) {
-          totalOverdue = +totalOverdue + Number(expense.value);
-        } else {
-          totalMonth = +totalMonth + Number(expense.value);
-        }
-        total = +total + Number(expense.value);
-
         
         if (expense.currency !== "EUR") { 
           
@@ -56,6 +49,14 @@ class UnpaidExpensesController {
           
           expense.exchangedValue = response.data.paymentOptions[0].sourceAmount;
         }
+
+        if (expense.overdue) {
+          totalOverdue = +totalOverdue + Number(expense.exchangedValue || expense.value);
+        } else {
+          totalMonth = +totalMonth + Number(expense.exchangedValue || expense.value);
+        }
+        total = +total + Number(expense.exchangedValue || expense.value);
+
       }));
 
       total = +total.toFixed(2);
