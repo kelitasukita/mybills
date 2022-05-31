@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
 import EarningsRepository from "../repositories/EarningsRepository";
@@ -36,10 +37,30 @@ class OverviewController {
       .getRawOne();
 
     const expensesRepo = getCustomRepository(ExpenseRepository);
-    const { expenses } = await expensesRepo.createQueryBuilder('expenses')
-      .select('SUM(value)', 'expenses')
+    const expensesByCurrency = await expensesRepo.createQueryBuilder('expenses')
+      .select('currency')
+      .addSelect('SUM(value)', 'expenses')
       .where('"dueDate" BETWEEN :firstDay AND :endDate', {endDate, firstDay})
-      .getRawOne();
+      .groupBy('currency')
+      .getRawMany();
+    
+    let expenses = 0;
+
+    await Promise.all(expensesByCurrency.map(async totalByCurrency => {
+      let finalValue = +totalByCurrency.expenses;
+      if (totalByCurrency.currency !== 'EUR') {
+        const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
+          "targetAmount": finalValue,
+          "sourceCurrency": "EUR", // @todo Mudar isso para o currency padrão do usuário
+          "targetCurrency": totalByCurrency.currency,
+          "preferredPayIn":"BANK_TRANSFER"
+        });
+        
+        finalValue = +response.data.paymentOptions[0].sourceAmount;
+      }
+
+      expenses += finalValue;
+    }));
 
     return response.json({
       earnings: (+earnings).toFixed(2),
