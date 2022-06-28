@@ -19,7 +19,7 @@ expensesRouter.post('/', CreateExpenseController.handle);
 expensesRouter.delete('/:id', DeleteExpenseController.handle);
 
 expensesRouter.get('/unpaid', async (req: Request, res: Response, next) => {
-  const {year, month} = req.query;
+  const { year, month } = req.query;
 
   const expenseRepository = getCustomRepository(ExpenseRepository);
   await expenseRepository.generateMissingRecurrent(year, month);
@@ -34,17 +34,17 @@ expensesRouter.put('/:id', EditExpenseController.handle);
 expensesRouter.patch('/:id/toggle', ToggleExpenseController.handle);
 
 expensesRouter.get('/test/wise', async (req, res) => {
-  
+
   const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
-    "targetAmount":req.query.valor,
-    "sourceCurrency":"EUR",
-    "targetCurrency":"BRL",
-    "preferredPayIn":"BANK_TRANSFER"
+    "targetAmount": req.query.valor,
+    "sourceCurrency": "EUR",
+    "targetCurrency": "BRL",
+    "preferredPayIn": "BANK_TRANSFER"
   });
 
   const inEuro = response.data.paymentOptions[0].sourceAmount;
 
-  return res.json({ 
+  return res.json({
     brl: +req.query.valor,
     eur: inEuro
   });
