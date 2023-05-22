@@ -39,15 +39,19 @@ class UnpaidExpensesController {
         expense.overdue = new Date(expense.dueDate) < from;
         
         if (expense.currency !== "EUR") { 
-          
-          const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
-            "targetAmount": expense.value,
-            "sourceCurrency": "EUR", // @todo Mudar isso para o currency padrão do usuário
-            "targetCurrency": expense.currency,
-            "preferredPayIn":"BANK_TRANSFER"
-          });
-          
-          expense.exchangedValue = response.data.paymentOptions[0].sourceAmount;
+          try {
+
+            const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
+              "targetAmount": expense.value,
+              "sourceCurrency": "EUR", // @todo Mudar isso para o currency padrão do usuário
+              "targetCurrency": expense.currency,
+              "preferredPayIn":"BANK_TRANSFER"
+            });
+
+            expense.exchangedValue = response.data.paymentOptions[0].sourceAmount;
+          } catch(e) {
+            console.log('Falhou transfer wise no unpaid! =[');
+          }
         }
 
         if (expense.overdue) {
