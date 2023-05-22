@@ -7,7 +7,7 @@ import overviewRouter from './overview.routes';
 import creditcardRouter from './creditcards.routes';
 
 const routes = Router();
-
+console.log('Rotas');
 // login routes
 routes.use('/login', loginRouter);
 

@@ -49,14 +49,19 @@ class OverviewController {
     await Promise.all(expensesByCurrency.map(async totalByCurrency => {
       let finalValue = +totalByCurrency.expenses;
       if (totalByCurrency.currency !== 'EUR') {
-        const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
-          "targetAmount": finalValue,
-          "sourceCurrency": "EUR", // @todo Mudar isso para o currency padrão do usuário
-          "targetCurrency": totalByCurrency.currency,
-          "preferredPayIn":"BANK_TRANSFER"
-        });
-        
-        finalValue = +response.data.paymentOptions[0].sourceAmount;
+        try {
+
+          const response = await axios.post(`https://api.transferwise.com/v3/quotes/`, {
+            "targetAmount": finalValue,
+            "sourceCurrency": "EUR", // @todo Mudar isso para o currency padrão do usuário
+            "targetCurrency": totalByCurrency.currency,
+            "preferredPayIn":"BANK_TRANSFER"
+          });
+          
+          finalValue = +response.data.paymentOptions[0].sourceAmount;
+        } catch (e) {
+          console.log('Transferwise falhou =[');
+        }
       }
 
       expenses += finalValue;

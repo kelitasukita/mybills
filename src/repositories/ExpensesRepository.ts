@@ -4,6 +4,7 @@ import Expense from '../models/Expense';
 
 interface ExpenseData {
   description: string;
+  currency: string;
   value: number;
   automaticDebit: boolean;
   dueDate: Date;
@@ -76,7 +77,7 @@ class ExpenseRepository extends Repository<Expense> {
         },
       ],
       order: {
-        dueDate: "ASC",
+        description: "ASC",
         value: "DESC"
       }
     });
@@ -93,7 +94,7 @@ class ExpenseRepository extends Repository<Expense> {
         dueDate: Between(from, to)
       },
       order: {
-        dueDate: "ASC",
+        description: "ASC",
         value: "DESC"
       }
     });
@@ -157,15 +158,17 @@ class ExpenseRepository extends Repository<Expense> {
       .distinct()
       .select('description')
       .addSelect('value')
+      .addSelect('currency')
       .addSelect('MAX("dueDate")', 'duedate')
       .where('recurrent = :value', { value: true })
       .andWhere('"dueDate" < :from', { from })
       .groupBy('description')
       .addGroupBy('value')
+      .addGroupBy('currency')
       .orderBy('duedate', 'DESC')
       .getRawMany();
 
-    // console.log(recurrents);
+    console.log(recurrents);
 
     const recurrentCreated: any[] = [];
 
@@ -192,6 +195,7 @@ class ExpenseRepository extends Repository<Expense> {
             await this.createExpense({
               description: bill.description,
               value: +bill.value,
+              currency: bill.currency,
               automaticDebit: true,
               dueDate: newDueDate,
               paid: false,
