@@ -42,7 +42,7 @@ class ListEarningController {
     let total: Number = 0 as Number;
 
     earnings.map(earning => {
-      total = +total + Number(earning.value);
+      total = +total.toFixed(2) + Number(earning.value);
     })
 
     return response.json({
