@@ -1,20 +1,26 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-@Entity('creditcards')
+@Entity("creditcards")
 class CreditCard {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: String;
 
-  @Column('varchar')
+  @Column("varchar")
   brand: string;
 
-  @Column('varchar')
+  @Column("varchar")
   name: string;
 
-  @Column('integer')
+  @Column("integer")
   due_day: Number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column("decimal", { precision: 10, scale: 2 })
   limit: Number;
 
   @CreateDateColumn()
