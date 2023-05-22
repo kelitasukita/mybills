@@ -31,21 +31,15 @@ class RecurrentExpense {
   automaticDebit: boolean;
 
   @Column("date")
-  dueDate: Date;
+  dueDateMonth: Number;
+
+  @Column("date")
+  dueDateDay: Number;
 
   @Column("varchar")
   obs: String;
 
-  @Column("int")
-  currentInstallment: number;
-
-  @Column("int")
-  installments: number;
-
-  @Column("boolean")
-  paid: boolean;
-
-  @Column("boolean")
+  @Column("varchar")
   currency: String;
 
   @CreateDateColumn()
