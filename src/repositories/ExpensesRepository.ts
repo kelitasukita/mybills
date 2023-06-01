@@ -112,6 +112,8 @@ class ExpenseRepository extends Repository<Expense> {
         "dueDate",
         "currentInstallment",
         "installments",
+        "currency",
+        "obs",
       ],
       where: {
         dueDate: Between(from, to),
